@@ -1,0 +1,23 @@
+{
+	"name": "xivapi",
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"postinstall": "astro telemetry disable",
+		"dev": "astro dev",
+		"start": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"sharp"
+		]
+	},
+	"dependencies": {
+		"@astrojs/starlight": "^0.31.0",
+		"astro": "^5.1.5",
+		"sharp": "^0.32.5"
+	}
+}

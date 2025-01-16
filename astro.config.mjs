@@ -6,9 +6,16 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
 	integrations: [
 		starlight({
-			title: 'My Docs',
+			title: 'xivapi',
+			favicon: '/favicon.ico',
+			logo: {
+				light: './src/assets/logo-light.png',
+				dark: './src/assets/logo-dark.png',
+				replacesTitle: true,
+			},
 			social: {
-				github: 'https://github.com/withastro/starlight',
+				discord: 'https://discord.gg/MFFVHWC',
+				github: 'https://github.com/xivapi',
 			},
 			sidebar: [
 				{

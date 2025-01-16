@@ -1,0 +1,13 @@
+/* Using default theme with a red accent - the full "oxide" theme is a little on-the-nose with the red. */
+/* Dark mode colors. */
+:root {
+	--sl-color-accent-low: #450d08;
+	--sl-color-accent: #c80000;
+	--sl-color-accent-high: #fcb4a8;
+}
+/* Light mode colors. */
+:root[data-theme='light'] {
+	--sl-color-accent-low: #ffc8bf;
+	--sl-color-accent: #cb0000;
+	--sl-color-accent-high: #640101;
+}

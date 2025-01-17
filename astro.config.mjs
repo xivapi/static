@@ -17,17 +17,11 @@ export default defineConfig({
 				discord: 'https://discord.gg/MFFVHWC',
 				github: 'https://github.com/xivapi',
 			},
+			pagination: false,
 			sidebar: [
 				{
 					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					autogenerate: { directory: 'docs/guides' },
 				},
 				{
 					label: 'API Reference',

@@ -29,6 +29,11 @@ export default defineConfig({
 					label: 'Reference',
 					autogenerate: { directory: 'reference' },
 				},
+				{
+					label: 'API Reference',
+					link: '/api/1/docs',
+					attrs: { target: '_blank' },
+				}
 			],
 			components: {
 				Hero: './src/components/Hero.astro'

@@ -13,7 +13,10 @@
 	"pnpm": {
 		"onlyBuiltDependencies": [
 			"sharp"
-		]
+		],
+		"patchedDependencies": {
+			"@astrojs/starlight": "patches/@astrojs__starlight.patch"
+		}
 	},
 	"dependencies": {
 		"@astrojs/starlight": "^0.31.0",

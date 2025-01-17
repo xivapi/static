@@ -1,16 +1,19 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
 template: splash
+
+title: XIVAPI
+description: The FFXIV web API - Search and explore comprehensive game data.
+head:
+  - tag: title
+    content: XIVAPI - The Final Fantasy 14 Web API
 hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
+  title: The Final Fantasy 14 Web API
+  tagline: Search and explore comprehensive game data.
   actions:
-    - text: Example Guide
+    - text: TODO
       link: /guides/example/
       icon: right-arrow
-    - text: Read the Starlight docs
+    - text: TODO
       link: https://starlight.astro.build
       icon: external
       variant: minimal
@@ -18,19 +21,29 @@ hero:
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+```json frame="terminal" title="/api/1/sheet/Item/37362?fields=Name,Description"
+{
+  "row_id": 37362,
+  "fields": {
+    "Name": "Ironworks Tool Set",
+    "Description": "A set of Garlond Ironworks' finest instruments."
+  }
+}
+```
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+## Features
+
+<CardGrid>
+	<Card title="Fast updates" icon="download">
+		Updated patch data _automatically_ available shortly after it's available.
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="Stable API" icon="puzzle">
+		Pin schema and game versions to _guarantee_ stability until you're ready to update.
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="Time travel (backwards)" icon="rocket">
+		Data for _every_ patch since 7.0 available and easily accessible.
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="Search anything" icon="magnifier">
+		Every sheet, in every patch, with any schema. It's _all_ there.
 	</Card>
 </CardGrid>

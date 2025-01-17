@@ -30,6 +30,9 @@ export default defineConfig({
 					autogenerate: { directory: 'reference' },
 				},
 			],
+			components: {
+				Hero: './src/components/Hero.astro'
+			},
 			customCss: [
 				'./src/styles/custom.css'
 			]

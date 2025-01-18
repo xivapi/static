@@ -24,6 +24,7 @@ export default defineConfig({
 					label: 'Guides',
 					autogenerate: { directory: 'docs/guides' },
 				},
+				'docs/software',
 				{
 					label: 'API Reference',
 					link: '/api/1/docs',

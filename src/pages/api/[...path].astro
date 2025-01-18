@@ -8,7 +8,7 @@ export const getStaticPaths: GetStaticPaths = () =>
 const { path } = Astro.props
 ---
 
-<StarlightPage frontmatter={{ title: "Docs-only environment" }}>
+<StarlightPage frontmatter={{ title: "Docs-only environment", pagefind: false }}>
   <p>You've tried to navigate to <code>/api/{path}</code>, which is an endpoint or
   route served by another part of the application stack.</p>
 

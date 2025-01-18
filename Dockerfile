@@ -13,6 +13,6 @@ RUN pnpm run build
 
 # Runtime static server
 # https://github.com/lipanski/docker-static-website
-FROM lipanski/docker-static-website:latest AS runtime
+FROM lipanski/docker-static-website:2.4.0 AS runtime
 COPY --from=build /app/dist .
 EXPOSE 3000

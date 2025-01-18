@@ -19,6 +19,7 @@ export default defineConfig({
 			},
 			pagination: false,
 			sidebar: [
+				'docs/welcome',
 				{
 					label: 'Guides',
 					autogenerate: { directory: 'docs/guides' },

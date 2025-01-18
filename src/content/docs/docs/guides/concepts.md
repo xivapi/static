@@ -2,6 +2,7 @@
 title: Game Concepts
 sidebar:
   order: 1
+prev: false
 ---
 
 overview. below should be talking in broad terms

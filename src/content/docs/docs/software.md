@@ -1,5 +1,7 @@
 ---
 title: Open Source
+prev: false
+next: false
 ---
 
 why oss is important

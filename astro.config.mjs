@@ -17,7 +17,6 @@ export default defineConfig({
 				discord: 'https://discord.gg/MFFVHWC',
 				github: 'https://github.com/xivapi',
 			},
-			pagination: false,
 			sidebar: [
 				'docs/welcome',
 				{

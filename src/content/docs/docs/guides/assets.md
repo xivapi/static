@@ -2,6 +2,7 @@
 title: Retrieving Assets
 sidebar:
   order: 5
+next: false
 ---
 
 overview. mention etags/caching/etc - usage in web browser will handle for you, but if using in a server environment, expected to cache per tags &c

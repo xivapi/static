@@ -23,7 +23,7 @@ Highlights include:
 - **[API Stability](/docs/guides/pinning/):** You can't decide when a patch
   releases, but you _can_ decide when it impacts you. Pin requests to ensure
   consistency until you're ready to update your code.
-- **[Full-dataset search](/docs/guides/search/):** Any value can be used in
+- **[Full-dataset search](/docs/guides/search/):** Any field can be used in
   search queries and filters to help find what you're looking for - even if
   nobody knows what it means!
 - **[Web-ready assets](/docs/guides/assets/):** Assets provided in browser

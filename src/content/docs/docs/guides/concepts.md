@@ -6,21 +6,25 @@ sidebar:
 prev: false
 ---
 
-There are many concepts and terms that have become core to the understanding of
-FFXIV within the developer community. This pages serves to introduce and
-describe a few that are important to understand when utilising XIVAPI.
+There are concepts and usages of terminology that take on particular meaning
+within the context of FFXIV development. While XIVAPI abstracts most of these
+details, a few specific concepts are essential to understand to make effective
+use of its features, detailed below.
 
 ## Versions
 
-As a live service MMO, FFXIV receives "patches" and "hotfixes" regularly. In
-many instances, these will require updates to the game client files. The
-snapshot of the game files as of one of these updates is considered a
-**version**.
+As a live service MMO, FFXIV receives "patches" and "hotfixes" regularly. These
+frequently involve updates to the game client's files. The content of the game
+files after one of these updates is considered a **version**, and is typically
+named after the patch that introduced the changes. Between updates, the game
+files are completely static - they are never updated or modified during
+gameplay.
 
 While loose correlations may be drawn, it is best practice to consider that
 _any_ update may result in _any_ change to client files. As such, a change of
-game version should be considered a "major" update in
-[semver](https://semver.org/) terms.
+game version should be considered a "major" update in [semver] terms.
+
+[semver]: https://semver.org/
 
 ## Sheets
 
@@ -29,11 +33,12 @@ data in a relational database. A sizeable portion of this data is included in
 the game client files in a propriatary file format referred to as excel (no,
 not the Microsoft product), or exd.
 
-Within this data, a single data collection is known as a **sheet**, analogous to
-a table in database terminology. It's important to note that, while _many_
-concepts are similar to traditions RDBMS, it's not a perfect 1:1 match - excel
-is specialised for its usage in FFXIV, and has a non-standard feature set as a
-result.
+While similarities may be drawn between excel and traditional RDBMS, it is not a
+perfect 1:1 mapping. Excel is specialised for its usage as static data in FFXIV,
+and features non-standard functionality as a result.
+
+Within excel, a single collection of data is known as a **sheet**, analogous
+to a table within a database.
 
 ### Fields
 
@@ -74,7 +79,7 @@ to provide per-locale data on a sheet-by-sheet basis. Through this, access to
 sheet data allows for full access to strings across all languages available in
 an edition.
 
-:::caution[Limitations of XIVAPI locale support]
+:::note[Limitations of XIVAPI locale support]
 
 At time of writing, XIVAPI only provides data available in the global game
 client: Japanese, English, German, and French. Alternatives may be available for
@@ -115,4 +120,6 @@ represent a best-effort attempt at defining meaning and semantics for data that
 we don't control, and as such are not comprehensive, or always perfectly
 accurate.
 
-Schemas that are used by XIVAPI are listed on the [software](/docs/software/) page.
+Schemas that are used by XIVAPI are listed on the [software] page.
+
+[software]: /docs/software/

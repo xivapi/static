@@ -80,6 +80,9 @@ you wish to use.
 `exdschema@2:rev:<revision>`
 : Uses the schema as of the specified [git revision](https://git-scm.com/docs/revisions).
 
+EXDSchema uses the `exdschema@2:rev:<revision>` form for canonical specifiers,
+with the full SHA-1 object name for the resolved commit as the revision.
+
 [exdschema]: https://github.com/xivdev/EXDSchema
 
 #### Example
@@ -87,10 +90,6 @@ you wish to use.
 Among other changes, commit [`c44cfd2`][c44cfd2] renamed `WorldDCGroupType`'s
 `Unknown0` field to `NeolobbyId`. A schema pin can be used to observe that
 `c44cfd2` contains these changes, and that the parent commit `22f45f4` does not.
-
-Additionally visible is the canonical schema specifiers included in the
-response. For EXDSchema, these specifiers will utilise the full commit SHA-1
-object name.
 
 ```json frame="none" /=(exdschema@2:rev:\w+)/ "\"NeolobbyId\"" "\"Unknown0\""
 // /api/1/sheet/WorldDCGroupType/9? \

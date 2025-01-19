@@ -17,22 +17,26 @@ be posted there first.
 ## Features
 
 XIVAPI offers access to FFXIV data from anywhere with an internet connection.
-It's a bit like a game install in the cloud - if it's shipped in the client,
-we've got it.
+Every sheet, texture, and value - if it's part of the game client, we've got it.
 
 Highlights include:
-- **[Guaranteed stability](/docs/guides/pinning/):** Ensure data doesn't change
-  until you're ready to update.
-- **[Full-dataset search](/docs/guides/search/):** Every single field is
-  available for search and filtering.
-- **[Web-ready assets](/docs/guides/assets/):** Assets exposed in browser
-  friendly formats, ready for use.
-- **[Built in the open](/docs/software/):** The API and its dependencies are completely OSS. Join in!
+- **[API Stability](/docs/guides/pinning/):** You can't decide when a patch
+  releases, but you _can_ decide when it impacts you. Pin requests to ensure
+  consistency until you're ready to update your code.
+- **[Full-dataset search](/docs/guides/search/):** Any value can be used in
+  search queries and filters to help find what you're looking for - even if
+  nobody knows what it means!
+- **[Web-ready assets](/docs/guides/assets/):** Assets provided in browser
+  friendly formats, no further processing required.
+- **[Built in the open](/docs/software/):** The API, its dependencies, and much
+  of the FFXIV developer ecosystem is proudly open source. See how it all ticks,
+  or jump in and lend a hand!
 
 ## What It Isn't
 
-The API offers a view of the data found in the game files - this notably does
-_not_ include any information about players or their actions.
+The API can _only_ provide data that is found in the game's client files. It has
+no access to server-side information such as players or free companies, nor
+runtime information such as inventory or equipment.
 
 If you're looking for runtime data, there are a few adjacent projects that may
 offer what you need listed on [the software page](/docs/software/#alternatives).

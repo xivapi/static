@@ -1,7 +1,9 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { rehypeHeadingIds } from '@astrojs/markdown-remark';
 import starlight from '@astrojs/starlight';
+import { defineConfig } from 'astro/config';
 import { remarkDefinitionList, defListHastHandlers } from 'remark-definition-list';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 
 // https://astro.build/config
 export default defineConfig({
@@ -36,14 +38,19 @@ export default defineConfig({
 				MarkdownContent: './src/components/MarkdownContent.astro',
 			},
 			customCss: [
-				'./src/styles/custom.css',
+				'./src/styles/theme.css',
+				'./src/styles/headings.css',
 			]
 		}),
 	],
 	markdown: {
 		remarkPlugins: [remarkDefinitionList],
+		rehypePlugins: [
+			rehypeHeadingIds,
+			[rehypeAutolinkHeadings, { behavior: 'wrap' }],
+		],
 		remarkRehype: {
-			handlers: { ...defListHastHandlers }
-		}
+			handlers: { ...defListHastHandlers },
+		},
 	},
 });

@@ -4,18 +4,19 @@ sidebar:
   order: 2
 ---
 
-As outlined in important concepts, [game versions][versions] may result in
+As outlined in important concepts, new [game versions][versions] may result in
 arbitrary breaking changes, and [schemas] may recieve changes from the community
 to fix or improve them.
 
-These changes may result in changes to the canonical representation of the game
-data, which will then inevitably cause breaking changes in code that utilises
-the API to consume that data.
+Either of the above may affect how the API structures data in responses - in
+turn, breaking any code utilising the API that relies on that structure.
 
-Nobody wants to be on the recieving end of unannounced breaking changes. To help
-avoid this, XIVAPI offers the ability to "pin" aspects of the data you request.
-By doing so, you can ensure that your consumption of the API won't change until
-you're ready to update it.
+Nobody wants to be on the recieving end of unannounced breaking changes. XIVAPI
+lets you "pin" game versions and schemas to ensure that your consumption of the
+API won't change until you're ready to update it.
+
+In addition, pins can be used to view data as it was in any prior game version
+that has been recorded by the API.
 
 [versions]: /docs/guides/concepts/#versions
 [schemas]: /docs/guides/concepts/#schemas

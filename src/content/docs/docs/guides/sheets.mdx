@@ -64,7 +64,7 @@ Struct
 Array
 : When consecutive fields represent a repetition of a value, schemas may group
   them into an array. Arrays always have a fixed length - unused entries are
-  typically set to a null or zero state.
+  typically set to a null or zero value.
 
 Additionally, scalars may have additional semantics supplied by their type:
 
@@ -81,7 +81,7 @@ Icon
 ### Filtering
 
 Sheets regularly contain more information than is needed for a single use-case.
-This quickly compounds when field relationships are present to link in
+This quickly compounds when field relationships are present that link in
 additional rows of data. For example, the [full response][pct brush full] for
 the "Angel Brush" `Item` is over 80kB before compression, representing
 approximately 6500 lines of formatted JSON.
@@ -333,7 +333,7 @@ will be clamped to a server-defined maximum.
 
 </details>
 
-Alternatively, a list of row IDs can be provided if already know - useful for
+Alternatively, a list of row IDs can be provided if already known - useful for
 retrieving a batch of rows from a sheet.
 
 <details>

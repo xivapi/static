@@ -66,18 +66,14 @@ entirely.
 
 ### Editions & Localisations
 
-The game client that connects to international data centres maintained by Square
-Enix is referred to, for the sake of documentation, as the "global edition" of
-FFXIV. The global edition ships with localisations in Japanese, English, German,
-and French.
+FFXIV is officially localised into Japanese, English, German, and French. These
+localisations all use the same "global" game client, containing content prepared
+for all 4 locales.
 
-In addition to the global edition, seperate Korean and Chinese game editions are
-available, each providing a localisation into their respective language.
-
-All localisation in the game files make use of sheets, which offer the ability
-to provide per-locale data on a sheet-by-sheet basis. Through this, access to
-sheet data allows for full access to strings across all languages available in
-an edition.
+In addition to the above, seperate Chinese and Korean game clients are
+available, each providing a localisation into their respective language. These
+clients follow different versioning to the global client, and usually contain
+slightly outdated content.
 
 :::note[Limitations of XIVAPI locale support]
 
@@ -99,26 +95,23 @@ sharing their row IDs.
 By convention, _most_ of these splits result in the infrequent-access data being
 moved to a sheet with the `Transient` suffix.
 
-For a concrete example, the `Action` sheet contains a significant amount of
-data, encapsulating the information required for the action to be viewed, cast,
-placed on hotbars, and so forth. Tooltips, however, contain a fairly sizeable
-amount of text explaining the effect of the action, which is only utilised when
-actively hovering over the action's icon - so the description is instead stored
-in the `ActionTransient` sheet. The data for the "Cure" action, can be found at
-row ID `120` on both sheets.
+For example, the `Action` sheet contains data about both player and enemy
+actions. While most of this data is frequently used throughout the game to
+display details about actions, the description of an action is only ever shown
+in mouse-over tooltips. As such, the description is stored in the
+`ActionTransient` sheet, rather than `Action` itself. Data for the White Mage
+action "Cure" can be found at row ID `120` on both sheets.
+
 
 ## Schemas
 
-Despite the descriptions of features and fields above, in reality, the game
-files contain very little structural information about the sheets we use. Only
-the names of the sheets, languages supported, and count and types of fields in
-the sheets are statically known.
+The game files contain minimal information about how sheets are structured. For
+any sheet; only its name, supported languages, the number of fields, and those
+field's types are available.
 
-For everything else, ranging from field names and structures to the inter-sheet
-relationships they represent, the community maintains **schemas**. These schemas
-represent a best-effort attempt at defining meaning and semantics for data that
-we don't control, and as such are not comprehensive, or always perfectly
-accurate.
+To flesh out this information, **schemas** are available, providing names and
+structure to the fields in each sheet. These schemas are a community effort, and
+are not perfectly comprehensive or accurate.
 
 Schemas that are used by XIVAPI are listed on the [software] page.
 

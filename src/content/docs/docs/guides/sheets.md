@@ -2,15 +2,10 @@
 title: Reading Sheets
 sidebar:
   order: 3
+reference:
+  href: /api/1/docs#tag/sheets
+  description: OpenAPI specification for sheet endpoints.
 ---
-
-import { LinkCard } from '@astrojs/starlight/components';
-
-<LinkCard
-  title="API Reference"
-  href="/api/1/docs#tag/sheets"
-  description="OpenAPI specification for sheet endpoints."
-/>
 
 Sheet endpoints retrieve data for one or more rows from a sheet, mapping values
 to match a schema. Pinning is available for both game version and schema for

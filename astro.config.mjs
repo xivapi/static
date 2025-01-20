@@ -32,10 +32,11 @@ export default defineConfig({
 				}
 			],
 			components: {
-				Hero: './src/components/Hero.astro'
+				Hero: './src/components/Hero.astro',
+				MarkdownContent: './src/components/MarkdownContent.astro',
 			},
 			customCss: [
-				'./src/styles/custom.css'
+				'./src/styles/custom.css',
 			]
 		}),
 	],

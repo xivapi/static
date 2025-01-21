@@ -23,6 +23,8 @@ The `query` parameter is the core API for search, controlling both result
 relevance and filtering. Queries are written in a powerful query language,
 outlined below.
 
+Queries are executed against the sheets specified by the `sheets` parameter.
+
 ### Clauses
 
 Clauses are the basic building block of queries, performing a comparison of a
@@ -32,7 +34,7 @@ field with an expected value. They take the basic form of
 <details>
 <summary><code>query=Name="Rainbow Drip"</code></summary>
 
-```json wrap "query=Name=\"Rainbow Drip\"" "Rainbow Drip"
+```json wrap "Name=\"Rainbow Drip\"" "Rainbow Drip"
 // /api/1/search?sheets=Action&fields=Name&query=Name="Rainbow Drip"
 {
   "results": [
@@ -57,7 +59,7 @@ structs and relationships, and array access notation for arrays.
 <details>
 <summary><code>query=ClassJob.Abbreviation="PCT"</code></summary>
 
-```json wrap "query=ClassJob.Abbreviation=\"PCT\""
+```json wrap "ClassJob.Abbreviation=\"PCT\""
 // /api/1/search?sheets=Action&fields=Name&query=ClassJob.Abbreviation="PCT"
 {
   "results": [
@@ -79,7 +81,7 @@ structs and relationships, and array access notation for arrays.
 <details>
 <summary><code>query=BaseParam[].Name="Spell Speed"</code></summary>
 
-```json wrap "query=BaseParam[].Name=\"Spell Speed\"" "Spell Speed"
+```json wrap "BaseParam[].Name=\"Spell Speed\"" "Spell Speed"
 // /api/1/search?sheets=Item&fields=Name,BaseParam[].Name&query=BaseParam[].Name="Spell Speed"
 {
   "results": [
@@ -124,7 +126,7 @@ parameter, fields may be decorated with language.
 <details>
 <summary><code>query=Name@ja="天使の筆"</code></summary>
 
-```json wrap "天使の筆" "Angel Brush"
+```json wrap "Name@ja=\"天使の筆\"" "Angel Brush"
 // /api/1/search?sheets=Item&fields=Name&query=Name@ja="天使の筆"
 {
   "results": [
@@ -161,7 +163,7 @@ comparisons with type-aware semantics.
 <details>
 <summary><code>query=Name~"rainbow"</code></summary>
 
-```json wrap "query=Name~\"rainbow\"" "Rainbow"
+```json wrap "Name~\"rainbow\"" "Rainbow"
 // /api/1/search?sheets=Action&fields=Name&query=Name~"rainbow"
 {
   "results": [
@@ -215,42 +217,270 @@ comparisons with type-aware semantics.
 
 </details>
 
----
+### Multiple Clauses & Relevancy
 
----
+One query may specify multiple clauses by seperating them with whitespace. All
+results will match at least one of the provided clauses.
 
----
+The ordering of results is defined by their relevance to the query - those that
+match more clauses will be sorted before those that match less. The value used
+for this ordering is returned in results as `score`.
 
----
+<details>
+<summary><code>query=ClassJobLevel=92 Name="Rainbow Drip"</code></summary>
 
----
+In this example, all actions available at `ClassJobLevel` 92 are returned. As
+rainbow drip also matches the `Name` clause, it is prioritised over the other
+results.
 
----
-
-### Multiple Clauses / scoring / something
-
-space-separated clauses
-outline must match at least one behavior, relevancy
-NOTE that score is black box
-
-### Filtering / compolex queries or something
-
-grouping, must/mustnot
-
-CAUTION that +/must needs to be urlescaped if typing as a url
-
-<details open>
-<summary><code>SHORT</code></summary>
-
-```json wrap
-// URL
-JSON
+```json wrap "ClassJobLevel=92 Name=\"Rainbow Drip\"" "92" "Rainbow Drip"
+// /api/1/search?sheets=Action&fields=ClassJobLevel,Name&query=ClassJobLevel=92 Name="Rainbow Drip"
+{
+  "results": [
+    {
+      "score": 2,
+      "row_id": 34688,
+      "fields": {
+        "ClassJobLevel": 92,
+        "Name": "Rainbow Drip"
+      }
+    },
+    {
+      "score": 1,
+      "row_id": 34644,
+      "fields": {
+        "ClassJobLevel": 92,
+        "Name": "Uncoiled Twinfang"
+      }
+    },
+    // ...
+  ]
+}
 ```
 
 </details>
 
-## something about multiple sheets and field behavior in that case?
+:::note
+
+The manner in which scores are calculated is not considered part of the API
+surface. Changes to the score calculation may be perfomed to improve result
+relevance. Any such adjustments could lead to changes of score values and
+resulting sort order of responses.
+
+:::
+
+### Filtering Results
+
+By default, all query clauses **should** match, which leads to the relevance
+sorting outlined above. This behavior can be adjusted with prefixes:
+
+`+clause`
+: Clause **must** match. Scoring will be performed as normal, however any
+  results that do not match will be discarded.
+
+`-clause`
+: Clause **must not** match. Any matching results will be discarded. Has no 
+  impact on scores.
+
+<details>
+<summary><code>query=+ClassJobCategory.PCT=true +ClassJobLevel=92</code></summary>
+
+This example searches for actions that must be usable by Pictomancers, and must
+become available at level 92. Rainbow Drip is the only action that matches this
+criteria.
+
+```json wrap "+ClassJobCategory.PCT=true +ClassJobLevel=92" "Rainbow Drip"
+// /api/1/search?sheets=Action&fields=Name&query=+ClassJobCategory.PCT=true +ClassJobLevel=92
+{
+  "results": [
+    {
+      "score": 2,
+      "row_id": 34688,
+      "fields": { "Name": "Rainbow Drip" }
+    }
+  ]
+}
+```
+
+</details>
+
+<details>
+<summary><code>query=ClassJobCategory.WAR=true -ClassJobLevel&lt;96</code></summary>
+
+This example searches for actions that should be usable by Warriors, and must
+not become available before level 96. No relevance is inferred from the level
+check, so the two results have equivalent scores.
+
+```json wrap "ClassJobCategory.WAR=true -ClassJobLevel<96"
+// /api/1/search?sheets=Action&fields=Name,ClassJobLevel&query=ClassJobCategory.WAR=true -ClassJobLevel<96
+{
+  "results": [
+    {
+      "score": 1,
+      "row_id": 36924,
+      "fields": {
+        "ClassJobLevel": 96,
+        "Name": "Primal Wrath"
+      }
+    },
+    {
+      "score": 1,
+      "row_id": 36925,
+      "fields": {
+        "ClassJobLevel": 100,
+        "Name": "Primal Ruination"
+      }
+    }
+  ]
+}
+```
+
+</details>
+
+To perform more complex queries, clauses may be grouped with parentheses. In a
+query, groups behave like a single clause, with an operation defined by the
+sub-query inside.
+
+For example, the simplified query `+a +(b c)` will return all results that match
+both `a` and at least one of `b` or `c`.
+
+<details>
+<summary><code>query=+ClassJobCategory.PCT=true +(ClassJobLevel=80 ClassJobLevel=90)</code></summary>
+
+This example searches for actions that are usable by a Pictomancer that _also_
+become available at level 80 or 90.
+
+```json wrap "+ClassJobCategory.PCT=true +(ClassJobLevel=80 ClassJobLevel=90)" "80" "90"
+// /api/1/search?sheets=Action&fields=Name,ClassJobLevel&query=+ClassJobCategory.PCT=true +(ClassJobLevel=80 ClassJobLevel=90)
+{
+  "results": [
+    {
+      "score": 2,
+      "row_id": 34662,
+      "fields": {
+        "ClassJobLevel": 80,
+        "Name": "Holy in White"
+      }
+    },
+    {
+      "score": 2,
+      "row_id": 34663,
+      "fields": {
+        "ClassJobLevel": 90,
+        "Name": "Comet in Black"
+      }
+    }
+  ]
+}
+```
+
+</details>
+
+:::caution[Query URI encoding]
+
+It is important to ensure that queries have been encoded to a URI-safe string
+when executing API requests, as characters such as `+` have alternate behavior
+if left in plaintext.
+
+Utilities for performing this encoding are available in most environments, i.e. `encodeURIComponent`
+in JavaScript.
+
+:::
+
+## Querying Multiple Sheets
+
+In addition to querying a single sheet as shown above, a query can be executed
+across multiple sheets simultaneously. When doing so, results from all queried
+sheets will be merged and sorted by their relevance.
+
+<details>
+<summary><code>sheets=Action,Item&query=Name~"rainbow"</code></summary>
+
+This example searches for both actions _and_ items that contain "rainbow" in
+their name.
+
+```json wrap "sheets=Action,Item" "Action" "Item"
+// /api/1/search?sheets=Action,Item&fields=Name&query=Name~"rainbow"
+{
+  "results": [
+    {
+      "sheet": "Item",
+      "row_id": 28928,
+      "fields": {
+        "Name": "Fae Rainbow"
+      }
+    },
+    {
+      "sheet": "Action",
+      "row_id": 34688,
+      "fields": {
+        "Name": "Rainbow Drip"
+      }
+    },
+    // ...
+  ]
+}
+```
+
+</details>
+
+When performing searches on multiple sheets, queries may only access the
+_intersection_ of available fields. If fields are queried that are only present
+on a subset of the specified sheets, query resolution will fail, and an error
+will be returned.
 
 ## Pagination
 
-not sure where this should sit in the page body
+The search endpoint accepts a `limit` parameter, with equivalent behavior to the
+[parameter of the same name][sheets-multiple-rows] accepted by sheet endpoints.
+
+If a response contains a subset of the full result set, a cursor value is
+provided in the `next` property. Further results may be obtained by passing this
+value to the `cursor` property in a new request. When querying a cursor, the
+`sheets` and `query` parameters are ignored, as the cursor is already operating
+on a previous request's dataset.
+
+[sheets-multiple-rows]: /docs/guides/sheets/#multiple-rows
+
+<details>
+<summary><code>query=Name~"rainbow"&limit=2</code></summary>
+
+This is an example query from [Operations & Values] that returns 4 total
+results, however the result limit has been set at 2 results. The first response
+contains a cursor in `next`, and the second request uses this cursor to fetch
+the remaining 2 results. No `next` is present on the second response, signalling
+that no further results are present.
+
+[Operations & Values]: #operations--values
+
+```json wrap "limit=2" "4bce9ed3-74d7-4d4c-940f-4a918d204a58"
+// /api/1/search?fields=Name&sheets=Action&query=Name~"rainbow"&limit=2
+{
+  "next": "4bce9ed3-74d7-4d4c-940f-4a918d204a58",
+  "results": [
+    {
+      "row_id": 34688,
+      "fields": { "Name": "Rainbow Drip" }
+    },
+    {
+      "row_id": 21474,
+      "fields": { "Name": "Lunar Rainbow" }
+    }
+  ]
+}
+// /api/1/search?fields=Name&cursor=4bce9ed3-74d7-4d4c-940f-4a918d204a58&limit=2
+{
+  "results": [
+    {
+      "row_id": 29388,
+      "fields": { "Name": "Rainbow Gulal" }
+    },
+    {
+      "row_id": 6288,
+      "fields": { "Name": "Rainbow Dynamo" }
+    }
+  ]
+}
+```
+
+</details>

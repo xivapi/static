@@ -376,8 +376,8 @@ It is important to ensure that queries have been encoded to a URI-safe string
 when executing API requests, as characters such as `+` have alternate behavior
 if left in plaintext.
 
-Utilities for performing this encoding are available in most environments, i.e. `encodeURIComponent`
-in JavaScript.
+Utilities for performing this encoding are available in most environments, i.e.
+`encodeURIComponent` in JavaScript.
 
 :::
 

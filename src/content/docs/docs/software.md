@@ -21,3 +21,4 @@ linked from welcome "what it isn't"
 lodestone scraper libs and stuff, dalamud
 
 other Cool Projects &c&c for lumina/explorer/godbert/alpha/blah
+also reslog2

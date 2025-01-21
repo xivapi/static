@@ -3,18 +3,74 @@ title: Retrieving Assets
 sidebar:
   order: 5
 next: false
+reference:
+  href: /api/1/docs#tag/assets
+  description: OpenAPI specification for asset endpoints.
 ---
 
-overview. mention etags/caching/etc - usage in web browser will handle for you, but if using in a server environment, expected to cache per tags &c
+Asset endpoints provide access to game files, converting them into readily
+consumable file formats.
 
-## Requesting assets
+Game version pinning is supported for all asset endpoints. As assets do not have
+any direct connection with sheet data, there is no need to pin a schema.
 
-mention how to find paths: asset fields (backlink to fields docs), game paths in general, godbert, explorer, reslog2, etc
+## A Word on Caching
 
-talk about conversions
+Asset responses contain the converted asset file itself - effectively allowing
+for the "[hotlinking]" of the resulting file.
 
-currently only image assets (at time of writing), but further formats and conversions may be added over time
+**This is encouraged!** Serving assets directly through XIVAPI makes it easy to
+keep them up to date between game versions, and can save a significant amount of
+disk space on a site-by-site basis. The API has several layers of caching in
+place to minimise undue load on the underlying asset service.
 
-## Maps
+In saying this, please ensure that you are making use of the cache behavior we
+provide. All asset endpoints include [`ETag` headers][etag] in responses, and
+will respect [`If-None-Match` headers][if-none-match] from clients.
 
-explain how maps are composed from multiple textures, outline intent of endpoint
+Many web clients, including all browsers, will handle this behavior on your
+behalf. If you're not sure, please reach out and we may be able to help check if
+it's working.
+
+[hotlinking]: https://developer.mozilla.org/en-US/docs/Glossary/Hotlink
+[etag]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag
+[if-none-match]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/If-None-Match
+
+## Fetch Assets
+
+Requests for an asset can be made using the asset's path within the game files,
+and a format for the asset to be converted to. While technically valid requests,
+many path/format combinations are nonsensical, and will return an error -
+there's no _sensible_ way to format a 3D model as a PNG!
+
+<!-- TODO: Better setup for this. -->
+| `/api/1/asset?path=ui/loadingimage/-nowloading_base01_hr1.tex&format=png` |
+| :---: |
+| ![](/api/1/asset?path=ui/loadingimage/-nowloading_base01_hr1.tex&format=png) |
+
+Game paths can be found through a number of tools, including XIVAPI itself -
+[icon fields] in sheets will include paths to the associated icon asset in the
+response. Many other [XIV data tools] also facilitate finding the file path
+you're looking for.
+
+The accepted file formats is a dynamic list, and will expand as needs arise.
+Check the [API reference][assets reference] for an up to date list of what is
+supported.
+
+[icon fields]: /docs/guides/sheets/#types
+[XIV data tools]: /docs/software#alternatives
+[assets reference]: /api/1/docs#tag/assets
+
+## Compose Maps
+
+For reasons associated with how maps function in the game, they are regularly
+split across a few files, and must be merged into a single image to look
+correct. To make this process simpler, the map asset endpoint is available, and
+performs this composition automatically when needed.
+
+| `/api/1/asset/map/s1d1/00` |
+| :---: |
+| ![](/api/1/asset/map/s1d1/00) |
+
+At time of writing, the appropiate map IDs can be found in the `Map` sheet, or
+through exploring the `ui/map` game file directory.

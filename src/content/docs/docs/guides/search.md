@@ -121,7 +121,7 @@ structs and relationships, and array access notation for arrays.
 </details>
 
 To search for values in a language other than the request-wide `language`
-parameter, fields may be decorated with language.
+parameter, fields may be decorated with a language.
 
 <details>
 <summary><code>query=Name@ja="天使の筆"</code></summary>
@@ -275,12 +275,10 @@ By default, all query clauses **should** match, which leads to the relevance
 sorting outlined above. This behavior can be adjusted with prefixes:
 
 `+clause`
-: Clause **must** match. Scoring will be performed as normal, however any
-  results that do not match will be discarded.
+: Clause **must** match. Only matching results will be included in the response.
 
 `-clause`
-: Clause **must not** match. Any matching results will be discarded. Has no 
-  impact on scores.
+: Clause **must not** match. Any matching results will be discarded.
 
 <details>
 <summary><code>query=+ClassJobCategory.PCT=true +ClassJobLevel=92</code></summary>
@@ -294,7 +292,6 @@ criteria.
 {
   "results": [
     {
-      "score": 2,
       "row_id": 34688,
       "fields": { "Name": "Rainbow Drip" }
     }
@@ -308,15 +305,13 @@ criteria.
 <summary><code>query=ClassJobCategory.WAR=true -ClassJobLevel&lt;96</code></summary>
 
 This example searches for actions that should be usable by Warriors, and must
-not become available before level 96. No relevance is inferred from the level
-check, so the two results have equivalent scores.
+not become available before level 96.
 
 ```json wrap "ClassJobCategory.WAR=true -ClassJobLevel<96"
 // /api/1/search?sheets=Action&fields=Name,ClassJobLevel&query=ClassJobCategory.WAR=true -ClassJobLevel<96
 {
   "results": [
     {
-      "score": 1,
       "row_id": 36924,
       "fields": {
         "ClassJobLevel": 96,
@@ -324,7 +319,6 @@ check, so the two results have equivalent scores.
       }
     },
     {
-      "score": 1,
       "row_id": 36925,
       "fields": {
         "ClassJobLevel": 100,

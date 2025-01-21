@@ -8,6 +8,8 @@ reference:
   description: OpenAPI specification for asset endpoints.
 ---
 
+import ImageFallback from '../../../../components/ImageFallback.astro';
+
 Asset endpoints provide access to game files, converting them into readily
 consumable file formats.
 
@@ -43,10 +45,8 @@ and a format for the asset to be converted to. While technically valid requests,
 many path/format combinations are nonsensical, and will return an error -
 there's no _sensible_ way to format a 3D model as a PNG!
 
-<!-- TODO: Better setup for this. -->
-| `/api/1/asset?path=ui/loadingimage/-nowloading_base01_hr1.tex&format=png` |
-| :---: |
-| ![](/api/1/asset?path=ui/loadingimage/-nowloading_base01_hr1.tex&format=png) |
+`/api/1/asset?path=ui/loadingimage/-nowloading_base01_hr1.tex&format=png`
+<ImageFallback src="/api/1/asset?path=ui/loadingimage/-nowloading_base01_hr1.tex&format=png"/>
 
 Game paths can be found through a number of tools, including XIVAPI itself -
 [icon fields] in sheets will include paths to the associated icon asset in the
@@ -68,9 +68,8 @@ split across a few files, and must be merged into a single image to look
 correct. To make this process simpler, the map asset endpoint is available, and
 performs this composition automatically when needed.
 
-| `/api/1/asset/map/s1d1/00` |
-| :---: |
-| ![](/api/1/asset/map/s1d1/00) |
+`/api/1/asset/map/s1d1/00`
+<ImageFallback src="/api/1/asset/map/s1d1/00"/>
 
 At time of writing, the appropiate map IDs can be found in the `Map` sheet, or
 through exploring the `ui/map` game file directory.

@@ -4,6 +4,8 @@ import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import { remarkDefinitionList, defListHastHandlers } from 'remark-definition-list';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeWidont from 'rehype-widont';
+import starlightLinksValidator from 'starlight-links-validator';
 
 // https://astro.build/config
 export default defineConfig({
@@ -41,7 +43,10 @@ export default defineConfig({
 				'./src/styles/headings.css',
 				'./src/styles/icons.css',
 				'./src/styles/theme.css',
-			]
+			],
+			plugins: [starlightLinksValidator({
+				exclude: ['/api/1/**']
+			})],
 		}),
 	],
 	markdown: {
@@ -49,6 +54,7 @@ export default defineConfig({
 		rehypePlugins: [
 			rehypeHeadingIds,
 			[rehypeAutolinkHeadings, { behavior: 'wrap' }],
+			rehypeWidont
 		],
 		remarkRehype: {
 			handlers: { ...defListHastHandlers },

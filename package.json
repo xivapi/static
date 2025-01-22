@@ -23,7 +23,9 @@
 		"@astrojs/starlight": "^0.31.0",
 		"astro": "^5.1.5",
 		"rehype-autolink-headings": "^7.1.0",
+		"rehype-widont": "^0.1.1",
 		"remark-definition-list": "^2.0.0",
-		"sharp": "^0.32.5"
+		"sharp": "^0.32.5",
+		"starlight-links-validator": "^0.14.1"
 	}
 }

@@ -430,9 +430,9 @@ The search endpoint accepts a `limit` parameter, with equivalent behavior to the
 
 If a response contains a subset of the full result set, a cursor value is
 provided in the `next` property. Further results may be obtained by passing this
-value to the `cursor` property in a new request. When querying a cursor, the
-`sheets` and `query` parameters are ignored, as the cursor is already operating
-on a previous request's dataset.
+value to the `cursor` parameter in a new request. When querying with a cursor,
+the `sheets` and `query` parameters are ignored, as the cursor is already
+operating on a previous request's dataset.
 
 [sheets-multiple-rows]: /docs/guides/sheets/#multiple-rows
 

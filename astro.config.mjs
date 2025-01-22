@@ -38,8 +38,9 @@ export default defineConfig({
 				MarkdownContent: './src/components/MarkdownContent.astro',
 			},
 			customCss: [
-				'./src/styles/theme.css',
 				'./src/styles/headings.css',
+				'./src/styles/icons.css',
+				'./src/styles/theme.css',
 			]
 		}),
 	],

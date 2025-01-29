@@ -38,6 +38,30 @@ These projects are directly used by, or form part of, XIVAPI itself.
   Thaliak, we can be sure that the API remains up to date with the latest game
   data.
 
+
+## API Clients
+
+As a web API, XIVAPI can be utilised without any further support libraries in
+any environment that is capable of making outbound requests. Libraries are
+available that build further language-specific utilities and support around the
+underlying API, maintained by the community:
+
+- [<Icon name="github" class="inline-icon"/> Eisenhuth/xivapi-swift](https://github.com/Eisenhuth/xivapi-swift): Swift
+- [<Icon name="github" class="inline-icon"/> xiv-gear-planner/xivapi-java](https://github.com/xiv-gear-planner/xivapi-java): Java
+
+The API also exposes an OpenAPI document at [/api/1/openapi.json][openapi] that
+is generated from the current API implementation, and powers the API reference
+at [/api/1/docs][docs].
+
+:::tip
+
+Did you write an API client? Please let us know to list the project above.
+
+:::
+
+[openapi]: /api/1/openapi.json
+[docs]: /api/1/docs
+
 ## Alternatives
 
 XIVAPI is not perfect for every use-case - and doesn't try to be! There is an
@@ -51,9 +75,9 @@ FFXIV's official website, Lodestone, has publicly accessible pages with
 information about characters, free companies, and the like. A few libraries
 and/or services are available that can read this information for use.
 
-- [xivapi/nodestone](https://github.com/xivapi/nodestone): TypeScript, library or server.
-- [xivapi/godestone](https://github.com/xivapi/godestone): Go, library.
-- [xivapi/NetStone](https://github.com/xivapi/NetStone): C#/.NET, library.
+- [<Icon name="github" class="inline-icon"/> xivapi/nodestone](https://github.com/xivapi/nodestone): TypeScript, library or server.
+- [<Icon name="github" class="inline-icon"/> xivapi/godestone](https://github.com/xivapi/godestone): Go, library.
+- [<Icon name="github" class="inline-icon"/> xivapi/NetStone](https://github.com/xivapi/NetStone): C#/.NET, library.
 
 You can also write your own library using the shared css selectors found at
 [xivapi/lodestone-css-selectors](https://github.com/xivapi/lodestone-css-selectors)

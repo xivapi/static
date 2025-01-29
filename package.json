@@ -20,8 +20,10 @@
 	},
 	"dependencies": {
 		"@astrojs/markdown-remark": "^6.0.2",
+		"@astrojs/preact": "^4.0.3",
 		"@astrojs/starlight": "^0.31.0",
 		"astro": "^5.1.5",
+		"preact": "^10.25.4",
 		"rehype-autolink-headings": "^7.1.0",
 		"rehype-widont": "^0.1.1",
 		"remark-definition-list": "^2.0.0",

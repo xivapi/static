@@ -1,5 +1,6 @@
 // @ts-check
 import { rehypeHeadingIds } from '@astrojs/markdown-remark';
+import preact from '@astrojs/preact';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import { remarkDefinitionList, defListHastHandlers } from 'remark-definition-list';
@@ -10,6 +11,7 @@ import starlightLinksValidator from 'starlight-links-validator';
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
+		preact(),
 		starlight({
 			title: 'xivapi',
 			favicon: '/favicon.ico',

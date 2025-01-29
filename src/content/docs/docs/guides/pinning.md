@@ -5,13 +5,13 @@ sidebar:
 ---
 
 As outlined in important concepts, new [game versions][versions] may result in
-arbitrary breaking changes, and [schemas] may recieve changes from the community
+arbitrary breaking changes, and [schemas] may receive changes from the community
 to fix or improve them.
 
 Either of the above may affect how the API structures data in responses - in
 turn, breaking any code utilising the API that relies on that structure.
 
-Nobody wants to be on the recieving end of unannounced breaking changes. XIVAPI
+Nobody wants to be on the receiving end of unannounced breaking changes. XIVAPI
 lets you "pin" game versions and schemas to ensure that your consumption of the
 API won't change until you're ready to update it.
 

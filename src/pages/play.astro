@@ -1,0 +1,11 @@
+---
+import StarlightPage, { type StarlightPageProps } from "@astrojs/starlight/components/StarlightPage.astro";
+import { SearchPlayground } from "components/play/playground";
+
+type Frontmatter = StarlightPageProps['frontmatter']
+const frontmatter: Frontmatter = { title: "Playground", template: 'splash' }
+---
+
+<StarlightPage frontmatter={frontmatter}>
+  <SearchPlayground client:idle />
+</StarlightPage>

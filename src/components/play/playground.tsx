@@ -1,4 +1,5 @@
-import { useState } from "preact/hooks"
+import type { JSX } from "preact"
+import { useCallback, useState } from "preact/hooks"
 
 export function SearchPlayground() {
   const [root, setRoot] = useState<Group>([{
@@ -8,7 +9,7 @@ export function SearchPlayground() {
 
   return <>
     <Group group={root} onChange={setRoot} />
-    <p>{stringifyGroup(root, 'root')}</p>
+    <pre><code>{stringifyGroup(root, 'root')}</code></pre>
   </>
 }
 
@@ -115,23 +116,22 @@ function Node({ node, onChange }: NodeProps) {
 const OCCUR = ['', '+', '-'] as const
 type Occur = (typeof OCCUR)[number]
 
+const OCCUR_OPTIONS: SelectOption<Occur>[] = OCCUR
+  .map(occur => ({ label: occur, value: occur }))
+
 type OccurProps = {
   occur: Occur,
   onChange: (occur: Occur) => void
 }
 
 function Occur({ occur, onChange }: OccurProps) {
-  // TODO: would be nice to include meaningful text with these, without it
-  // bleeding into the idle state
+  const value = mustExist(OCCUR_OPTIONS.find(option => option.value === occur))
   return (
-    <select
-      value={occur}
-      onChange={event => onChange(event.currentTarget.value as Occur)}
-    >
-      {OCCUR.map(occur => (
-        <option key={occur} value={occur}>{occur}</option>
-      ))}
-    </select>
+    <Select
+      value={value}
+      options={OCCUR_OPTIONS}
+      onChange={option => onChange(option.value)}
+    />
   )
 }
 
@@ -184,23 +184,22 @@ function Specifier({ specifier, onChange }: SpecifierProps) {
 const OPERATIONS = ['=', '~', '>=', '>', '<=', '<'] as const
 type Operation = (typeof OPERATIONS)[number]
 
+const OPERATION_OPTIONS: SelectOption<Operation>[] = OPERATIONS
+  .map(operation => ({ label: operation, value: operation }))
+
 type OperationProps = {
   operation: Operation,
   onChange: (operation: Operation) => void
 }
 
 function Operation({ operation, onChange }: OperationProps) {
-  // TODO: would be nice to include meaningful text with these, without it
-  // bleeding into the idle state
+  const value = mustExist(OPERATION_OPTIONS.find(option => option.value === operation))
   return (
-    <select
-      value={operation}
-      onChange={event => onChange(event.currentTarget.value as Operation)}
-    >
-      {OPERATIONS.map(operation => (
-        <option key={operation} value={operation}>{operation}</option>
-      ))}
-    </select>
+    <Select
+      value={value}
+      options={OPERATION_OPTIONS}
+      onChange={option => onChange(option.value)}
+    />
   )
 }
 
@@ -218,6 +217,46 @@ function Value({ value, onChange }: ValueProps) {
   />
 }
 
+type SelectOption<T extends string> = {
+  value: T
+  // TODO: would be nice to include descriptive content in the label
+  label: string
+}
+
+type SelectProps<T extends string> = {
+  value: SelectOption<T>,
+  options: SelectOption<T>[],
+  onChange: (operation: SelectOption<T>) => void
+}
+
+function Select<T extends string>({ value, options, onChange }: SelectProps<T>) {
+  const onSelectChange = useCallback((event: JSX.TargetedEvent<HTMLSelectElement>) => {
+    const newValue = event.currentTarget.value as T
+    const newOption = mustExist(options.find(option => option.value === newValue))
+    onChange(newOption)
+  }, [options, onChange])
+
+  // TODO: would be nice to include meaningful text with these, without it
+  // bleeding into the idle state
+  return (
+    <select
+      value={value.value}
+      onChange={onSelectChange}
+    >
+      {options.map(option => (
+        <option key={option.value} value={option.value}>{option.label}</option>
+      ))}
+    </select>
+  )
+}
+
 class UnreachableException {
   constructor(_value: never) { }
+}
+
+function mustExist<T>(value: T | undefined): T {
+  if (value == null) {
+    throw new Error('precondition broken')
+  }
+  return value
 }

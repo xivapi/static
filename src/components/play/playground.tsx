@@ -3,15 +3,21 @@ import { useState } from "preact/hooks"
 export function SearchPlayground() {
   const [root, setRoot] = useState<Group>([{
     occur: '',
-    node:createClauseNode({specifier: 'todo specifier', value: 'todo value'})
+    node: createClauseNode({ specifier: 'todo.specifier', value: '"todo value"' })
   }])
 
-  return (
+  return <>
     <Group group={root} onChange={setRoot} />
-  )
+    <p>{stringifyGroup(root, 'root')}</p>
+  </>
 }
 
 type Group = GroupEntry[]
+
+function stringifyGroup(group: Group, position: 'root' | 'child' = 'child'): string {
+  const content = group.map(stringifyGroupEntry).join(' ')
+  return position === 'root' ? content : `(${content})`
+}
 
 type GroupProps = {
   group: Group
@@ -44,7 +50,9 @@ type GroupEntry = {
   node: Node
 }
 
-
+function stringifyGroupEntry({ occur, node }: GroupEntry): string {
+  return `${occur}${stringifyNode(node)}`
+}
 
 type GroupEntryProps = {
   entry: GroupEntry
@@ -72,6 +80,14 @@ function createGroupNode(group: Group = []): Node {
   return { type: 'group', group }
 }
 
+function stringifyNode(node: Node): string {
+  switch (node.type) {
+    case 'clause': return stringifyClause(node.clause)
+    case 'group': return stringifyGroup(node.group)
+    default: throw new UnreachableException(node)
+  }
+}
+
 type NodeProps = {
   node: Node
   onChange: (node: Node) => void
@@ -79,13 +95,20 @@ type NodeProps = {
 
 function Node({ node, onChange }: NodeProps) {
   switch (node.type) {
-    case 'clause': {
-      return <Clause clause={node.clause} onChange={clause => onChange({ type: 'clause', clause })} />
-    }
-    case "group": {
-      return <Group group={node.group} onChange={group => onChange({ type: 'group', group })} />
-    }
-    default: throw new UnreachableException(node)
+    case 'clause': return (
+      <Clause
+        clause={node.clause}
+        onChange={clause => onChange({ type: 'clause', clause })}
+      />
+    )
+    case "group": return (
+      <Group
+        group={node.group}
+        onChange={group => onChange({ type: 'group', group })}
+      />
+    )
+    default:
+      throw new UnreachableException(node)
   }
 }
 
@@ -125,6 +148,10 @@ function createClause(clause: Partial<Clause> = {}): Clause {
     value: '',
     ...clause
   }
+}
+
+function stringifyClause({ specifier, operation, value }: Clause): string {
+  return `${specifier}${operation}${value}`
 }
 
 type ClauseProps = {

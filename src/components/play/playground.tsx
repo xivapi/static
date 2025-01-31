@@ -116,8 +116,14 @@ function Node({ node, onChange }: NodeProps) {
 const OCCUR = ['', '+', '-'] as const
 type Occur = (typeof OCCUR)[number]
 
+const OCCUR_LABELS: Record<Occur, string> = {
+  "": "SHOULD",
+  "+": "MUST",
+  "-": "MUST NOT"
+}
+
 const OCCUR_OPTIONS: SelectOption<Occur>[] = OCCUR
-  .map(occur => ({ label: occur, value: occur }))
+  .map(occur => ({  value: occur ,label: OCCUR_LABELS[occur]}))
 
 type OccurProps = {
   occur: Occur,

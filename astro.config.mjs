@@ -29,6 +29,7 @@ export default defineConfig({
 					autogenerate: { directory: 'docs/guides' },
 				},
 				'docs/software',
+				'docs/migrate',
 				{
 					label: 'API Reference',
 					link: '/api/1/docs',
@@ -49,6 +50,12 @@ export default defineConfig({
 			})],
 		}),
 	],
+	redirects: {
+		'/docs/guides': {
+			status: 302,
+			destination: '/docs/guides/concepts'
+		}
+	},
 	markdown: {
 		remarkPlugins: [remarkDefinitionList],
 		rehypePlugins: [

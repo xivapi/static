@@ -6,6 +6,7 @@ import {
   OCCUR,
   OPERATIONS,
   parseQuery,
+  parseSpecifier,
   parseValue,
   stringifyQuery,
   type Clause,
@@ -33,7 +34,10 @@ export function SearchPlayground() {
   const test = parseQuery(stringified)
 
   return <>
-    <Group group={root} onChange={setRoot} />
+    <div className="not-content">
+      <Group group={root} onChange={setRoot} root={true} />
+    </div>
+
     <pre><code>{stringified}</code></pre>
     <pre><code>{JSON.stringify(test, undefined, 2)}</code></pre>
   </>
@@ -41,30 +45,87 @@ export function SearchPlayground() {
 
 type GroupProps = {
   group: Group
+  root?: boolean
   onChange: (group: Group) => void
 }
 
-function Group({ group, onChange }: GroupProps) {
-  return (
-    <div style={{ border: '1px solid red', padding: 5 }}>
-      {group.map((entry, index) => <>
-        <GroupEntry
-          key={index}
-          entry={entry}
-          onChange={entry => {
-            const newGroup = [...group]
-            newGroup[index] = entry
-            onChange(newGroup)
-          }}
-        />
-        <button onClick={() => onChange([...group.slice(undefined, index), ...group.slice(index + 1)])}>delete</button>
-      </>)}
+function Group({
+  group,
+  root = false,
+  onChange
+}: GroupProps) {
+  const deleteIndex = (index: number) => onChange([
+    ...group.slice(undefined, index),
+    ...group.slice(index + 1),
+  ])
 
-      <button onClick={() => onChange([...group, { occur: '', node: createClauseNode() }])}>add clause</button>
-      <button onClick={() => onChange([...group, { occur: '', node: createGroupNode() }])}>add group</button>
+  return (
+    <div className={clsx(styles.group, !root && styles.nest)}>
+      {group.map((entry, index) => (
+        <div className={styles.row}>
+          <Delete onClick={() => deleteIndex(index)}/>
+          <GroupEntry
+            key={index}
+            entry={entry}
+            onChange={entry => {
+              const newGroup = [...group]
+              newGroup[index] = entry
+              onChange(newGroup)
+            }}
+          />
+        </div>
+      ))}
+
+      <div className={clsx(
+        styles.actions,
+        group.length > 0 && styles.padded,
+      )}>
+        <button
+          onClick={() => onChange([...group, { occur: '', node: createClauseNode() }])}
+        >
+          + Clause
+        </button>
+        <button
+          onClick={() => onChange([...group, { occur: '', node: createGroupNode() }])}
+        >
+          + Group
+        </button>
+      </div>
     </div>
   )
 }
+
+type DeleteProps = {
+  disabled?: boolean,
+  onClick: () => void
+}
+
+function Delete({
+  onClick
+}: DeleteProps) {
+  return (
+    <button
+      className={styles.delete}
+      onClick={onClick}
+      aria-label="Delete query node"
+    >
+      <IconClose/>
+    </button>
+  )
+}
+
+// Copied out of starlight's builtins.
+const IconClose = () => (
+  <svg
+    aria-hidden="true"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="currentColor"
+  >
+    <path d="m13.41 12 6.3-6.29a1.004 1.004 0 1 0-1.42-1.42L12 10.59l-6.29-6.3a1.004 1.004 0 0 0-1.42 1.42l6.3 6.29-6.3 6.29a1 1 0 0 0 0 1.42.998.998 0 0 0 1.42 0l6.29-6.3 6.29 6.3a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.42L13.41 12Z"/>
+  </svg>
+)
 
 type GroupEntryProps = {
   entry: GroupEntry
@@ -73,7 +134,7 @@ type GroupEntryProps = {
 
 function GroupEntry({ entry, onChange }: GroupEntryProps) {
   return (
-    <div>
+    <div className={styles.groupEntry}>
       <Occur occur={entry.occur} onChange={occur => onChange({ ...entry, occur })} />
       <Node node={entry.node} onChange={node => onChange({ ...entry, node })} />
     </div>
@@ -148,10 +209,14 @@ type SpecifierProps = {
 }
 
 function Specifier({ specifier, onChange }: SpecifierProps) {
-  return <input
-    value={specifier}
-    onInput={event => onChange(event.currentTarget.value)}
-  />
+  const invalid = parseSpecifier(specifier).type == 'err'
+  return (
+    <input
+      value={specifier}
+      onInput={event => onChange(event.currentTarget.value)}
+      className={clsx(styles.control, invalid && styles.invalid)}
+    />
+  )
 }
 const OPERATION_OPTIONS: SelectOption<Operation>[] = OPERATIONS
   .map(operation => ({ label: operation, value: operation }))
@@ -184,7 +249,7 @@ function Value({ value, onChange }: ValueProps) {
     <input
       value={value}
       onInput={event => onChange(event.currentTarget.value)}
-      className={clsx(styles.input, invalid && styles.invalid)}
+      className={clsx(styles.control, invalid && styles.invalid)}
     />
   )
 }
@@ -214,6 +279,7 @@ function Select<T extends string>({ value, options, onChange }: SelectProps<T>) 
     <select
       value={value.value}
       onChange={onSelectChange}
+      className={styles.control}
     >
       {options.map(option => (
         <option key={option.value} value={option.value}>{option.label}</option>

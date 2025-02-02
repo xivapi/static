@@ -33,6 +33,7 @@ export function stringifyQuery(root: Group): string {
 // #region Parsing support
 // -----
 
+// This whole shtick isn't 1:1 with the real thing. It should be, but like. nom is rust, not ts. And I'm lazy.
 enum Token {
   Plus,
   Minus,
@@ -242,6 +243,10 @@ function stringifyClause({ specifier, operation, value }: Clause): string {
 export type Specifier = string
 
 RULE_SPECIFIER.setPattern(apply(tok(Token.Specifier), token => token.text))
+
+export function parseSpecifier(input: string): Result<Specifier, ParseError> {
+  return parseRule(input, RULE_SPECIFIER)
+}
 
 // -----
 // #endregion

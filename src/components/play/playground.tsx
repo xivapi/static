@@ -1,13 +1,14 @@
-import { useId, useRef, useState } from "preact/hooks"
+import { useId, useLayoutEffect, useRef, useState } from "preact/hooks"
 import {
-  createClauseNode,
-  parseQuery,
   stringifyQuery,
   type Group,
 } from "./query";
 import { Editor } from "./editor";
 import styles from './playground.module.css'
 import { CopyIcon, SendHorizontalIcon } from "lucide-preact";
+import { codeToHast } from "shiki/bundle/web";
+import { toJsxRuntime } from "hast-util-to-jsx-runtime";
+import * as jsxRuntime from "preact/jsx-runtime";
 
 export function SearchPlayground() {
   const [sheets, setSheets] = useState<string>('')
@@ -83,9 +84,38 @@ export function SearchPlayground() {
         </button>
       </div>
 
-      {response && (
-        <pre className={styles.response}><code>{response}</code></pre>
-      )}
+      {response && <Response response={response} />}
     </div>
   )
+}
+
+type ResponseProps = {
+  response: string
+}
+
+function Response({ response }: ResponseProps) {
+  const [nodes, setNodes] = useState<jsxRuntime.JSX.Element>()
+  useLayoutEffect(() => {
+    void highlight(response).then(setNodes)
+  }, [])
+  console.log(nodes)
+  return <pre className={styles.response}><code>{nodes}</code></pre>
+}
+
+async function highlight(code: string) {
+  const out = await codeToHast(code, {
+    lang: 'json',
+    defaultColor: false,
+    themes: {
+      light: 'catppuccin-latte',
+      dark: 'catppuccin-mocha'
+    },
+    colorReplacements: {
+      // Remove backgrounds
+      'catppuccin-latte': { '#eff1f5': 'transparent' },
+      'catppuccin-mocha': { '#1e1e2e': 'transparent' },
+    }
+  })
+  // @ts-expect-error fuck off
+  return toJsxRuntime(out, jsxRuntime)
 }

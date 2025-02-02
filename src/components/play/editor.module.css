@@ -71,6 +71,7 @@
 
 .control.invalid {
   z-index: 2;
+  color: var(--sl-badge-danger-text);
   border-color: var(--sl-badge-danger-border);
   background-color: var(--sl-badge-danger-bg);
 }

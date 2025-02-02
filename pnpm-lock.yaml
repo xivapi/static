@@ -28,6 +28,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      hast-util-to-jsx-runtime:
+        specifier: ^2.3.2
+        version: 2.3.2
       lucide-preact:
         specifier: ^0.474.0
         version: 0.474.0(preact@10.25.4)
@@ -46,6 +49,9 @@ importers:
       sharp:
         specifier: ^0.32.5
         version: 0.32.6
+      shiki:
+        specifier: ^1
+        version: 1.27.2
       starlight-links-validator:
         specifier: ^0.14.1
         version: 0.14.1(@astrojs/starlight@0.31.0(patch_hash=3148e5f65bd42af69e92e50e7a793d75ca5c62edbeb874d689080cf75c02c568)(astro@5.1.7(rollup@4.30.1)(typescript@5.7.3)))
@@ -1834,8 +1840,8 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  oniguruma-to-es@2.0.0:
-    resolution: {integrity: sha512-pE7+9jQgomy10aK6BJKRNHj1Nth0YLOzb3iRuhlz4gRzNSBSd7hga6U8BE6o0SoSuSkqv+PPtt511Msd1Hkl0w==}
+  oniguruma-to-es@2.3.0:
+    resolution: {integrity: sha512-bwALDxriqfKGfUufKGGepCzu9x7nJQuoRoAFp4AnwehhC2crqrDIAP/uN2qdlsAvSMpeRC3+Yzhqc7hLmle5+g==}
 
   p-limit@2.3.0:
     resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
@@ -3227,7 +3233,7 @@ snapshots:
     dependencies:
       '@shikijs/types': 1.27.2
       '@shikijs/vscode-textmate': 10.0.1
-      oniguruma-to-es: 2.0.0
+      oniguruma-to-es: 2.3.0
 
   '@shikijs/engine-oniguruma@1.27.2':
     dependencies:
@@ -4915,7 +4921,7 @@ snapshots:
     dependencies:
       wrappy: 1.0.2
 
-  oniguruma-to-es@2.0.0:
+  oniguruma-to-es@2.3.0:
     dependencies:
       emoji-regex-xs: 1.0.0
       regex: 5.1.1

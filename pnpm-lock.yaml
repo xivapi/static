@@ -43,6 +43,9 @@ importers:
       starlight-links-validator:
         specifier: ^0.14.1
         version: 0.14.1(@astrojs/starlight@0.31.0(patch_hash=3148e5f65bd42af69e92e50e7a793d75ca5c62edbeb874d689080cf75c02c568)(astro@5.1.7(rollup@4.30.1)(typescript@5.7.3)))
+      typescript-parsec:
+        specifier: ^0.3.4
+        version: 0.3.4
 
 packages:
 
@@ -2246,6 +2249,9 @@ packages:
   type-fest@4.32.0:
     resolution: {integrity: sha512-rfgpoi08xagF3JSdtJlCwMq9DGNDE0IMh3Mkpc1wUypg9vPi786AiqeBBKcqvIkq42azsBM85N490fyZjeUftw==}
     engines: {node: '>=16'}
+
+  typescript-parsec@0.3.4:
+    resolution: {integrity: sha512-6RD4xOxp26BTZLopNbqT2iErqNhQZZWb5m5F07/UwGhldGvOAKOl41pZ3fxsFp04bNL+PbgMjNfb6IvJAC/uYQ==}
 
   typescript@5.7.3:
     resolution: {integrity: sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==}
@@ -5517,6 +5523,8 @@ snapshots:
       safe-buffer: 5.2.1
 
   type-fest@4.32.0: {}
+
+  typescript-parsec@0.3.4: {}
 
   typescript@5.7.3: {}
 

@@ -1,5 +1,6 @@
 import type { JSX } from "preact"
 import { useCallback, useState } from "preact/hooks"
+import { alt, apply, buildLexer, expectEOF, expectSingleResult, nil, opt, rep, rule, seq, tok } from "typescript-parsec"
 
 export function SearchPlayground() {
   const [root, setRoot] = useState<Group>([{
@@ -7,13 +8,82 @@ export function SearchPlayground() {
     node: createClauseNode({ specifier: 'todo.specifier', value: '"todo value"' })
   }])
 
+  const stringified = stringifyGroup(root, 'root');
+
+  // rouud trip go brr
+  const wrapped = `(${stringified})`
+  let test;
+  try {
+    test = expectSingleResult(expectEOF(RULE_GROUP.parse(tokeniser.parse(wrapped))))
+  } catch {
+    test = 'failed to parse'
+  }
+
   return <>
     <Group group={root} onChange={setRoot} />
-    <pre><code>{stringifyGroup(root, 'root')}</code></pre>
+    <pre><code>{stringified}</code></pre>
+    <pre><code>{JSON.stringify(test, undefined, 2)}</code></pre>
   </>
 }
 
+enum Token {
+  Plus,
+  Minus,
+  Whitespace,
+  Specifier,
+  Ampersand,
+  BracketOpen,
+  BracketClose,
+  ParenOpen,
+  ParenClose,
+  Eq,
+  Gt,
+  Lt,
+  Tilde,
+  Boolean,
+  Number,
+  String,
+}
+
+const tokeniser = buildLexer([
+  [true, /^\+/g, Token.Plus],
+  [true, /^-/g, Token.Minus],
+  [false, /^\s+/g, Token.Whitespace],
+  // NOTE: This is an intentional simplification - modelling the full query
+  // behavior of relation operations I feel risks exposing functionality I'm not
+  // convinced is stable yet.
+  [true, /^[\w.@\[\]]+/g, Token.Specifier],
+  [true, /^\(/g, Token.ParenOpen],
+  [true, /^\)/g, Token.ParenClose],
+  [true, /^=/g, Token.Eq],
+  [true, /^>/g, Token.Gt],
+  [true, /^</g, Token.Lt],
+  [true, /^~/g, Token.Tilde],
+  [true, /^true|false/g, Token.Boolean],
+  // NOTE: Omitting exponents for the sake of my own sanity for now.
+  [true, /^\d+(\.\d+)?/g, Token.Number],
+  [true, /^"(?:\\"|\\\\|[^"\\])+"/g, Token.String],
+])
+
+const RULE_GROUP = rule<Token, Group>();
+const RULE_GROUP_ENTRY = rule<Token, GroupEntry>();
+const RULE_NODE = rule<Token, Node>();
+const RULE_OCCUR = rule<Token, Occur>();
+const RULE_CLAUSE = rule<Token, Clause>();
+const RULE_SPECIFIER = rule<Token, Specifier>();
+const RULE_OPERATION = rule<Token, Operation>();
+const RULE_VALUE = rule<Token, Value>();
+
 type Group = GroupEntry[]
+
+RULE_GROUP.setPattern(apply(
+  seq(
+    tok(Token.ParenOpen),
+    rep(RULE_GROUP_ENTRY),
+    tok(Token.ParenClose)
+  ),
+  ([_open, entries, _close]) => entries
+))
 
 function stringifyGroup(group: Group, position: 'root' | 'child' = 'child'): string {
   const content = group.map(stringifyGroupEntry).join(' ')
@@ -28,7 +98,7 @@ type GroupProps = {
 function Group({ group, onChange }: GroupProps) {
   return (
     <div style={{ border: '1px solid red', padding: 5 }}>
-      {group.map((entry, index) => (
+      {group.map((entry, index) => <>
         <GroupEntry
           key={index}
           entry={entry}
@@ -38,7 +108,8 @@ function Group({ group, onChange }: GroupProps) {
             onChange(newGroup)
           }}
         />
-      ))}
+        <button onClick={() => onChange([...group.slice(undefined, index), ...group.slice(index + 1)])}>delete</button>
+      </>)}
 
       <button onClick={() => onChange([...group, { occur: '', node: createClauseNode() }])}>add clause</button>
       <button onClick={() => onChange([...group, { occur: '', node: createGroupNode() }])}>add group</button>
@@ -50,6 +121,11 @@ type GroupEntry = {
   occur: Occur,
   node: Node
 }
+
+RULE_GROUP_ENTRY.setPattern(apply(
+  seq(RULE_OCCUR, RULE_NODE),
+  ([occur, node]) => ({ occur, node })
+))
 
 function stringifyGroupEntry({ occur, node }: GroupEntry): string {
   return `${occur}${stringifyNode(node)}`
@@ -80,6 +156,11 @@ function createClauseNode(clause: Partial<Clause> = {}): Node {
 function createGroupNode(group: Group = []): Node {
   return { type: 'group', group }
 }
+
+RULE_NODE.setPattern(alt(
+  apply(RULE_CLAUSE, clause => ({ type: 'clause', clause })),
+  apply(RULE_GROUP, group => ({ type: 'group', group })),
+))
 
 function stringifyNode(node: Node): string {
   switch (node.type) {
@@ -116,6 +197,12 @@ function Node({ node, onChange }: NodeProps) {
 const OCCUR = ['', '+', '-'] as const
 type Occur = (typeof OCCUR)[number]
 
+RULE_OCCUR.setPattern(alt(
+  apply(tok(Token.Plus), () => '+' as const),
+  apply(tok(Token.Minus), () => '-' as const),
+  apply(nil(), () => '' as const),
+))
+
 const OCCUR_LABELS: Record<Occur, string> = {
   "": "SHOULD",
   "+": "MUST",
@@ -123,7 +210,7 @@ const OCCUR_LABELS: Record<Occur, string> = {
 }
 
 const OCCUR_OPTIONS: SelectOption<Occur>[] = OCCUR
-  .map(occur => ({  value: occur ,label: OCCUR_LABELS[occur]}))
+  .map(occur => ({ value: occur, label: OCCUR_LABELS[occur] }))
 
 type OccurProps = {
   occur: Occur,
@@ -156,6 +243,11 @@ function createClause(clause: Partial<Clause> = {}): Clause {
   }
 }
 
+RULE_CLAUSE.setPattern(apply(
+  seq(RULE_SPECIFIER, RULE_OPERATION, RULE_VALUE),
+  ([specifier, operation, value]) => ({ specifier, operation, value })
+))
+
 function stringifyClause({ specifier, operation, value }: Clause): string {
   return `${specifier}${operation}${value}`
 }
@@ -175,6 +267,8 @@ function Clause({ clause, onChange }: ClauseProps) {
 
 type Specifier = string
 
+RULE_SPECIFIER.setPattern(apply(tok(Token.Specifier), token => token.text))
+
 type SpecifierProps = {
   specifier: Specifier,
   onChange: (specifier: Specifier) => void
@@ -189,6 +283,15 @@ function Specifier({ specifier, onChange }: SpecifierProps) {
 
 const OPERATIONS = ['=', '~', '>=', '>', '<=', '<'] as const
 type Operation = (typeof OPERATIONS)[number]
+
+RULE_OPERATION.setPattern(alt(
+  apply(seq(tok(Token.Gt), tok(Token.Eq)), () => '>=' as const),
+  apply(seq(tok(Token.Lt), tok(Token.Eq)), () => '<=' as const),
+  apply(tok(Token.Gt), () => '>' as const),
+  apply(tok(Token.Lt), () => '<' as const),
+  apply(tok(Token.Eq), () => '=' as const),
+  apply(tok(Token.Tilde), () => '~' as const),
+))
 
 const OPERATION_OPTIONS: SelectOption<Operation>[] = OPERATIONS
   .map(operation => ({ label: operation, value: operation }))
@@ -210,6 +313,15 @@ function Operation({ operation, onChange }: OperationProps) {
 }
 
 type Value = string
+
+RULE_VALUE.setPattern(alt(
+  apply(tok(Token.Boolean), token => token.text),
+  apply(
+    seq(opt(tok(Token.Minus)), tok(Token.Number)),
+    ([maybeMinus, number]) => `${maybeMinus?.text ?? ''}${number.text}`
+  ),
+  apply(tok(Token.String), token => token.text),
+))
 
 type ValueProps = {
   value: Value,

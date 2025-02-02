@@ -1,7 +1,25 @@
 import type { JSX } from "preact"
 import { useCallback, useState } from "preact/hooks"
-import { createClauseNode, createGroupNode, OCCUR, OPERATIONS, parseQuery, stringifyQuery, type Clause, type Group, type GroupEntry, type Node, type Occur, type Operation, type Specifier, type Value } from "./query";
+import {
+  createClauseNode,
+  createGroupNode,
+  OCCUR,
+  OPERATIONS,
+  parseQuery,
+  parseValue,
+  stringifyQuery,
+  type Clause,
+  type Group,
+  type GroupEntry,
+  type Node,
+  type Occur,
+  type Operation,
+  type Specifier,
+  type Value
+} from "./query";
 import { UnreachableException } from "./util";
+import styles from './playground.module.css'
+import clsx from "clsx";
 
 export function SearchPlayground() {
   const [root, setRoot] = useState<Group>([{
@@ -12,12 +30,7 @@ export function SearchPlayground() {
   const stringified = stringifyQuery(root);
 
   // roumd trip go brr
-  let test;
-  try {
-    test = parseQuery(stringified)
-  } catch {
-    test = 'failed to parse'
-  }
+  const test = parseQuery(stringified)
 
   return <>
     <Group group={root} onChange={setRoot} />
@@ -165,10 +178,15 @@ type ValueProps = {
 }
 
 function Value({ value, onChange }: ValueProps) {
-  return <input
-    value={value}
-    onInput={event => onChange(event.currentTarget.value)}
-  />
+  const invalid = parseValue(value).type === 'err'
+
+  return (
+    <input
+      value={value}
+      onInput={event => onChange(event.currentTarget.value)}
+      className={clsx(styles.input, invalid && styles.invalid)}
+    />
+  )
 }
 
 type SelectOption<T extends string> = {

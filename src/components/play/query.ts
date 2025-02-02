@@ -1,13 +1,28 @@
-import { alt, apply, buildLexer, expectEOF, expectSingleResult, nil, opt, rep, rule, seq, tok } from "typescript-parsec";
+import {
+  alt,
+  apply,
+  buildLexer,
+  expectEOF,
+  expectSingleResult,
+  nil,
+  opt,
+  rep,
+  rule,
+  seq,
+  tok,
+  TokenError,
+  type Rule,
+  type TokenPosition,
+} from "typescript-parsec";
 import { UnreachableException } from "./util";
 
-export function parseQuery(input: string): Group {
+export function parseQuery(input: string): Result<Group, ParseError> {
   let wrapped = input;
   if (!input.startsWith('(')) {
     wrapped = `(${wrapped})`
   }
 
-  return expectSingleResult(expectEOF(RULE_GROUP.parse(tokeniser.parse(wrapped))))
+  return parseRule(wrapped, RULE_GROUP)
 }
 
 export function stringifyQuery(root: Group): string {
@@ -41,10 +56,6 @@ const tokeniser = buildLexer([
   [true, /^\+/g, Token.Plus],
   [true, /^-/g, Token.Minus],
   [false, /^\s+/g, Token.Whitespace],
-  // NOTE: This is an intentional simplification - modelling the full query
-  // behavior of relation operations I feel risks exposing functionality I'm not
-  // convinced is stable yet.
-  [true, /^[\w.@\[\]]+/g, Token.Specifier],
   [true, /^\(/g, Token.ParenOpen],
   [true, /^\)/g, Token.ParenClose],
   [true, /^=/g, Token.Eq],
@@ -54,7 +65,15 @@ const tokeniser = buildLexer([
   [true, /^true|false/g, Token.Boolean],
   // NOTE: Omitting exponents for the sake of my own sanity for now.
   [true, /^\d+(\.\d+)?/g, Token.Number],
-  [true, /^"(?:\\"|\\\\|[^"\\])+"/g, Token.String],
+  [true, /^"(?:\\"|\\\\|[^"\\])*"/g, Token.String],
+
+  // NOTE: This is an intentional simplification - modelling the full query
+  // behavior of relation operations I feel risks exposing functionality I'm not
+  // convinced is stable yet.
+  //
+  // NOTE: as the most general, this needs to be last such that other
+  // string-likes override it.
+  [true, /^[\w.@\[\]]+/g, Token.Specifier],
 ])
 
 const RULE_GROUP = rule<Token, Group>();
@@ -65,6 +84,42 @@ const RULE_CLAUSE = rule<Token, Clause>();
 const RULE_SPECIFIER = rule<Token, Specifier>();
 const RULE_OPERATION = rule<Token, Operation>();
 const RULE_VALUE = rule<Token, Value>();
+
+type Result<T, E> =
+  | { type: 'ok', value: T }
+  | { type: 'err', error: E }
+
+type ParseError = {
+  position: TokenPosition | undefined
+  message: string,
+}
+
+function parseRule<T>(input: string, rule: Rule<Token, T>): Result<T, ParseError> {
+  try {
+    return {
+      type: 'ok',
+      value: expectSingleResult(expectEOF(rule.parse(tokeniser.parse(input))))
+    }
+  } catch (error: unknown) {
+    if (isTokenError(error)) {
+      return {
+        type: 'err',
+        error: {
+          position: error.pos,
+          message: error.errorMessage,
+        }
+      }
+    }
+
+    throw error
+  }
+}
+
+// For some reason, the `TokenError` exported by the package doesn't actually
+// instanceof match what's thrown.
+function isTokenError(error: unknown): error is TokenError {
+  return error instanceof Error && Object.hasOwn(error, 'pos')
+}
 
 // -----
 // #endregion
@@ -213,13 +268,17 @@ RULE_OPERATION.setPattern(alt(
 export type Value = string
 
 RULE_VALUE.setPattern(alt(
-  apply(tok(Token.Boolean), token => token.text),
+  apply(tok(Token.String), token => token.text),
   apply(
     seq(opt(tok(Token.Minus)), tok(Token.Number)),
     ([maybeMinus, number]) => `${maybeMinus?.text ?? ''}${number.text}`
   ),
-  apply(tok(Token.String), token => token.text),
+  apply(tok(Token.Boolean), token => token.text),
 ))
+
+export function parseValue(input: string): Result<Value, ParseError> {
+  return parseRule(input, RULE_VALUE)
+}
 
 // -----
 // #endregion

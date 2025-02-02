@@ -1,0 +1,40 @@
+.playground {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field > label {
+  font-weight: bold;
+}
+
+.url {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.url .action {
+  /* border-radius: 0; */
+  padding: 0 0.5rem 0 0.75rem;
+}
+
+.url .action * {
+  vertical-align: middle;
+}
+
+.url .preview {
+  flex-grow: 1;
+  border: 1px solid var(--sl-color-gray-5);
+  padding: 0.5rem 2ch;
+}
+
+.response {
+  border: 1px solid var(--sl-color-gray-5);
+  padding: 0.5rem 2ch;
+}

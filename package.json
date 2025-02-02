@@ -24,6 +24,7 @@
 		"@astrojs/starlight": "^0.31.0",
 		"astro": "^5.1.5",
 		"clsx": "^2.1.1",
+		"lucide-preact": "^0.474.0",
 		"preact": "^10.25.4",
 		"rehype-autolink-headings": "^7.1.0",
 		"rehype-widont": "^0.1.1",

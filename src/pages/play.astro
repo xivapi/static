@@ -7,5 +7,7 @@ const frontmatter: Frontmatter = { title: "Playground", template: 'splash' }
 ---
 
 <StarlightPage frontmatter={frontmatter}>
-  <SearchPlayground client:idle />
+  <div class="not-content">
+    <SearchPlayground client:idle />
+  </div>
 </StarlightPage>

@@ -12,10 +12,7 @@ import { CopyIcon, SendHorizontalIcon } from "lucide-preact";
 export function SearchPlayground() {
   const [sheets, setSheets] = useState<string>('')
 
-  const [root, setRoot] = useState<Group>([{
-    occur: '',
-    node: createClauseNode({ specifier: 'todo.specifier', value: '"todo value"' })
-  }])
+  const [root, setRoot] = useState<Group>([])
 
   const [response, setResponse] = useState<string>()
 
@@ -31,8 +28,7 @@ export function SearchPlayground() {
 
     const controller = new AbortController();
     abortController.current = controller;
-    const TEMP = `https://beta.xivapi.com${url}`
-    fetch(TEMP, { signal: controller.signal })
+    fetch(url, { signal: controller.signal })
       .then(response => response.json())
       .then(
         response => {

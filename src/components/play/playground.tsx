@@ -98,7 +98,6 @@ function Response({ response }: ResponseProps) {
   useLayoutEffect(() => {
     void highlight(response).then(setNodes)
   }, [])
-  console.log(nodes)
   return <pre className={styles.response}><code>{nodes}</code></pre>
 }
 

@@ -23,7 +23,6 @@ export function SearchPlayground() {
   const abortController = useRef<AbortController>()
   const onSend = () => {
     if (abortController.current != null) {
-      console.log('abort!')
       abortController.current.abort()
     }
 

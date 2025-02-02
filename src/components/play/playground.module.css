@@ -20,7 +20,7 @@
 }
 
 .url .action {
-  /* border-radius: 0; */
+  flex-shrink: 0;
   padding: 0 0.5rem 0 0.75rem;
 }
 
@@ -30,8 +30,12 @@
 
 .url .preview {
   flex-grow: 1;
+  flex-shrink: 1;
   border: 1px solid var(--sl-color-gray-5);
   padding: 0.5rem 2ch;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .response {

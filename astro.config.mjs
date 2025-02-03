@@ -32,14 +32,19 @@ export default defineConfig({
 				},
 				'docs/software',
 				{
+					label: 'Search Playground',
+					link: '/play/',
+				},
+				{
 					label: 'API Reference',
 					link: '/api/1/docs',
 					attrs: { target: '_blank' },
 				}
 			],
 			components: {
-				Hero: './src/components/Hero.astro',
-				MarkdownContent: './src/components/MarkdownContent.astro',
+				ContentPanel: './src/components/overrides/ContentPanel.astro',
+				Hero: './src/components/overrides/Hero.astro',
+				MarkdownContent: './src/components/overrides/MarkdownContent.astro',
 			},
 			customCss: [
 				'./src/styles/headings.css',

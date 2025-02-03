@@ -3,7 +3,11 @@ import StarlightPage, { type StarlightPageProps } from "@astrojs/starlight/compo
 import { SearchPlayground } from "components/play/playground";
 
 type Frontmatter = StarlightPageProps['frontmatter']
-const frontmatter: Frontmatter = { title: "Playground", template: 'splash' }
+const frontmatter: Frontmatter = {
+  title: "Search Playground",
+  tableOfContents: false,
+  fluid: true,
+}
 ---
 
 <StarlightPage frontmatter={frontmatter}>

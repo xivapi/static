@@ -94,9 +94,23 @@ type ResponseProps = {
 
 function Response({ response }: ResponseProps) {
   const [nodes, setNodes] = useState<jsxRuntime.JSX.Element>()
+
   useLayoutEffect(() => {
-    void highlight(response).then(setNodes)
-  }, [])
+    // Set up a timeout that renders the unhighlighted string. If highlighting
+    // fails for any reason, or takes too long, this ensures _something_ is
+    // rendered.
+    const timeout = setTimeout(() => {
+      setNodes(<>{response}</>)
+    }, 250)
+
+    void highlight(response).then(highlighted => {
+      clearTimeout(timeout)
+      setNodes(highlighted)
+    })
+
+    return () => clearTimeout(timeout)
+  }, [response])
+  
   return <pre className={styles.response}><code>{nodes}</code></pre>
 }
 

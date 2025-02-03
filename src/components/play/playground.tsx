@@ -6,9 +6,8 @@ import {
 import { Editor } from "./editor";
 import styles from './playground.module.css'
 import { CopyIcon, SendHorizontalIcon } from "lucide-preact";
-import { codeToHast } from "shiki/bundle/web";
-import { toJsxRuntime } from "hast-util-to-jsx-runtime";
-import * as jsxRuntime from "preact/jsx-runtime";
+import type { JSX } from "preact/jsx-runtime";
+import { highlight } from "./highlight";
 
 export function SearchPlayground() {
   const [sheets, setSheets] = useState<string>('')
@@ -93,7 +92,7 @@ type ResponseProps = {
 }
 
 function Response({ response }: ResponseProps) {
-  const [nodes, setNodes] = useState<jsxRuntime.JSX.Element>()
+  const [nodes, setNodes] = useState<JSX.Element>()
 
   useLayoutEffect(() => {
     // Set up a timeout that renders the unhighlighted string. If highlighting
@@ -112,22 +111,4 @@ function Response({ response }: ResponseProps) {
   }, [response])
   
   return <pre className={styles.response}><code>{nodes}</code></pre>
-}
-
-async function highlight(code: string) {
-  const out = await codeToHast(code, {
-    lang: 'json',
-    defaultColor: false,
-    themes: {
-      light: 'catppuccin-latte',
-      dark: 'catppuccin-mocha'
-    },
-    colorReplacements: {
-      // Remove backgrounds
-      'catppuccin-latte': { '#eff1f5': 'transparent' },
-      'catppuccin-mocha': { '#1e1e2e': 'transparent' },
-    }
-  })
-  // @ts-expect-error fuck off
-  return toJsxRuntime(out, jsxRuntime)
 }

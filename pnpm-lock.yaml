@@ -22,6 +22,12 @@ importers:
       '@astrojs/starlight':
         specifier: ^0.31.0
         version: 0.31.0(patch_hash=3148e5f65bd42af69e92e50e7a793d75ca5c62edbeb874d689080cf75c02c568)(astro@5.1.7(rollup@4.30.1)(typescript@5.7.3))
+      '@shikijs/langs':
+        specifier: ^1
+        version: 1.27.2
+      '@shikijs/themes':
+        specifier: ^1
+        version: 1.27.2
       astro:
         specifier: ^5.1.5
         version: 5.1.7(rollup@4.30.1)(typescript@5.7.3)

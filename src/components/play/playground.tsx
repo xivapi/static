@@ -18,7 +18,7 @@ export function SearchPlayground() {
   const [response, setResponse] = useState<string>()
 
   const stringified = encodeURIComponent(stringifyQuery(root));
-  const url = `/api/1/search?sheets=${sheets}&query=${stringified}`
+  const url = `/api/search?sheets=${sheets}&query=${stringified}`
 
   const abortController = useRef<AbortController>()
   const onSend = () => {

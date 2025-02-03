@@ -38,7 +38,7 @@ export default defineConfig({
 				},
 				{
 					label: 'API Reference',
-					link: '/api/1/docs',
+					link: '/api/docs',
 					attrs: { target: '_blank' },
 				}
 			],
@@ -53,7 +53,7 @@ export default defineConfig({
 				'./src/styles/theme.css',
 			],
 			plugins: [starlightLinksValidator({
-				exclude: ['/api/1/**']
+				exclude: ['/api/**']
 			})],
 		}),
 	],

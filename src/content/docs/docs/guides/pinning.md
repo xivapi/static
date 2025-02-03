@@ -31,7 +31,7 @@ used, which always retrieves data from the most recent game version available.
 The full list of versions available for querying is available from the API,
 refer to the [API reference][version-reference] for more details.
 
-[version-reference]: /api/1/docs#tag/versions/GET/version
+[version-reference]: /api/docs#tag/versions/GET/version
 
 #### Example
 
@@ -41,10 +41,10 @@ looking at the Paladin action Cover, the range of which was increased by 10
 yalms.
 
 ```json /version=7.[01]/ /"Range": ([12]0)/
-// /api/1/sheet/Action/27?fields=Range&version=7.0
+// /api/sheet/Action/27?fields=Range&version=7.0
 { "fields": { "Range": 10 } }
 
-// /api/1/sheet/Action/27?fields=Range&version=7.1
+// /api/sheet/Action/27?fields=Range&version=7.1
 { "fields": { "Range": 20 } }
 ```
 
@@ -93,14 +93,14 @@ Among other changes, commit [`c44cfd2`][c44cfd2] renamed `WorldDCGroupType`'s
 `c44cfd2` contains these changes, and that the parent commit `22f45f4` does not.
 
 ```json frame="none" /=(exdschema@2:rev:\w+)/ "\"NeolobbyId\"" "\"Unknown0\""
-// /api/1/sheet/WorldDCGroupType/9? \
+// /api/sheet/WorldDCGroupType/9? \
 //   fields=Unknown0,NeolobbyId&schema=exdschema@2:rev:c44cfd2
 {
   "schema": "exdschema@2:rev:c44cfd270a72248293e242b4950b2ddeff9e49f2",
   "fields": { "NeolobbyId": 9 }
 }
 
-// /api/1/sheet/WorldDCGroupType/9? \
+// /api/sheet/WorldDCGroupType/9? \
 //   fields=Unknown0,NeolobbyId&schema=exdschema@2:rev:22f45f4
 {
   "schema": "exdschema@2:rev:22f45f4d6aab0c8722f5c0a6eabceb1e2a13c12c",

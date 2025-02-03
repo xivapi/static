@@ -3,7 +3,7 @@ title: Reading Sheets
 sidebar:
   order: 3
 reference:
-  href: /api/1/docs#tag/sheets
+  href: /api/docs#tag/sheets
   description: OpenAPI specification for sheet endpoints.
 ---
 
@@ -23,13 +23,13 @@ While XIVAPI defaults to English text in responses, other languages may be
 requested with the `language` parameter.
 
 ```json /language=(ja|en|de|fr)/
-// /api/1/sheet/Item/42589?fields=Name&language=ja
+// /api/sheet/Item/42589?fields=Name&language=ja
 { "fields": { "Name": "天使の筆" } }
-// /api/1/sheet/Item/42589?fields=Name&language=en
+// /api/sheet/Item/42589?fields=Name&language=en
 { "fields": { "Name": "Angel Brush" } }
-// /api/1/sheet/Item/42589?fields=Name&language=de
+// /api/sheet/Item/42589?fields=Name&language=de
 { "fields": { "Name": "Engelspinsel" } }
-// /api/1/sheet/Item/42589?fields=Name&language=fr
+// /api/sheet/Item/42589?fields=Name&language=fr
 { "fields": { "Name": "Pinceau angélique" } }
 ```
 
@@ -81,7 +81,7 @@ additional rows of data. For example, the [full response][pct brush full] for
 the "Angel Brush" `Item` is over 80kB before compression, representing
 approximately 6500 lines of formatted JSON.
 
-[pct brush full]: /api/1/sheet/Item/42589
+[pct brush full]: /api/sheet/Item/42589
 
 To reduce the amount of unnecessary data in responses, the `fields` parameter
 can be used to specify a subset of fields that should be included:
@@ -90,7 +90,7 @@ can be used to specify a subset of fields that should be included:
 <summary><code>fields=Name,LevelEquip</code></summary>
 
 ```json "Name" "LevelEquip"
-// /api/1/sheet/Item/42589?fields=Name,LevelEquip
+// /api/sheet/Item/42589?fields=Name,LevelEquip
 {
   "fields": {
     "Name": "Angel Brush",
@@ -108,7 +108,7 @@ specify the path to access it:
 <summary><code>fields=ItemUICategory.Name</code></summary>
 
 ```json "ItemUICategory.Name" "ItemUICategory" "Name"
-// /api/1/sheet/Item/42589?fields=ItemUICategory.Name
+// /api/sheet/Item/42589?fields=ItemUICategory.Name
 {
   "fields": {
     "ItemUICategory": {
@@ -128,7 +128,7 @@ Array fields may be specified to retrieve values from all entries:
 <summary><code>fields=BaseParam[].Name</code></summary>
 
 ```json "BaseParam[]" "BaseParam"
-// /api/1/sheet/Item/42589?fields=BaseParam[].Name
+// /api/sheet/Item/42589?fields=BaseParam[].Name
 {
   "fields": {
     "BaseParam": [
@@ -167,7 +167,7 @@ request.
 <summary><code>fields=Name,Name@lang(ja)</code></summary>
 
 ```json "Name@lang(ja)"
-// /api/1/sheet/Item/42589?fields=Name,Name@lang(ja)
+// /api/sheet/Item/42589?fields=Name,Name@lang(ja)
 {
   "fields": {
     "Name": "Angel Brush",
@@ -185,7 +185,7 @@ default for any nested fields:
 <summary><code>fields=ItemUICategory@lang(de).Name</code></summary>
 
 ```json "ItemUICategory@lang(de)"
-// /api/1/sheet/Item/42589?fields=ItemUICategory@lang(de).Name
+// /api/sheet/Item/42589?fields=ItemUICategory@lang(de).Name
 {
   "fields": {
     "ItemUICategory@lang(de)": {
@@ -211,7 +211,7 @@ icons, useful if the rich data is not going to be utilised.
 <summary><code>fields=ItemUICategory,ItemUICategory@as(raw)</code></summary>
 
 ```json "ItemUICategory@as(raw)"
-// /api/1/sheet/Item/42589?fields=ItemUICategory,ItemUICategory@as(raw)
+// /api/sheet/Item/42589?fields=ItemUICategory,ItemUICategory@as(raw)
 {
   "fields": {
     "ItemUICategory": {
@@ -235,7 +235,7 @@ text and formatting features in the game's rich text format.
 <summary><code>fields=Description,Description@as(html)</code></summary>
 
 ```json wrap "Description@as(html)"
-// /api/1/sheet/Item/44104?fields=Description,Description@as(html)
+// /api/sheet/Item/44104?fields=Description,Description@as(html)
 {
   "fields": {
     "Description": "Warm flour tortillas filled with slices of marinated rroneek chuck that has been grilled to a smoky char.\n\nEXP Bonus: +3% Duration: 30m\n(Duration can be extended to 60m by consuming multiple servings)",
@@ -260,7 +260,7 @@ identical syntax to the `fields` parameter [outlined above](#fields).
 <summary><code>transient=Description@as(html)</code></summary>
 
 ```json wrap "transient"
-// /api/1/sheet/Action/34684?transient=Description@as(html)
+// /api/sheet/Action/34684?transient=Description@as(html)
 {
   "fields": {
     // ...
@@ -289,15 +289,15 @@ the data looks appropriate before committing to using transient values.
 ## Multiple Rows
 
 All of the examples above have used the single-row endpoint,
-`/api/1/sheet/{sheet}/{row}`. If more than one row from the same sheet is
-desired, the row list endpoint is available.
+`/api/sheet/{sheet}/{row}`. If more than one row from the same sheet is desired,
+the row list endpoint is available.
 
 All parameters outlined above are also available for the row list.
 
 By default, it will list all rows in ID order, starting from the first.
 
 ```json
-// /api/1/sheet/Item?fields=Name
+// /api/sheet/Item?fields=Name
 {
   "rows": [
     { "row_id": 0, "fields": { "Name": "" } },
@@ -317,7 +317,7 @@ will be clamped to a server-defined maximum.
 <summary><code>after=1&limit=2</code></summary>
 
 ```json "after=1" "limit=2"
-// /api/1/sheet/Item?fields=Name&after=1&limit=2
+// /api/sheet/Item?fields=Name&after=1&limit=2
 {
   "rows": [
     { "row_id": 2, "fields": { "Name": "Fire Shard" } },
@@ -335,7 +335,7 @@ retrieving a batch of rows from a sheet.
 <summary><code>rows=1,29,46</code></summary>
 
 ```json /(?:rows=|row_id": )(1)/ "29" "46"
-// /api/1/sheet/Item?fields=Name&rows=1,29,46
+// /api/sheet/Item?fields=Name&rows=1,29,46
 {
   "rows": [
     { "row_id": 1, "fields": { "Name": "Gil" } },

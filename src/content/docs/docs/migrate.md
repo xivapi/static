@@ -14,7 +14,7 @@ assist in efforts to migrate to the new version. For full documentation of the
 v2 API, refer to the [guides] and [api reference].
 
 [guides]: /docs/guides/
-[api reference]: /api/1/docs
+[api reference]: /api/docs
 
 ## Game Content
 

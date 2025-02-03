@@ -3,7 +3,7 @@ import StarlightPage from "@astrojs/starlight/components/StarlightPage.astro";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = () =>
-	["1/docs", "1/openapi.json", "1/sheet/Item/42589"].map((path) => ({
+	["docs", "openapi.json", "sheet/Item/42589"].map((path) => ({
 		params: { path },
 		props: { path },
 	}));

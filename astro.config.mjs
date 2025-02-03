@@ -1,5 +1,6 @@
 // @ts-check
 import { rehypeHeadingIds } from '@astrojs/markdown-remark';
+import preact from '@astrojs/preact';
 import starlight from '@astrojs/starlight';
 import { defineConfig } from 'astro/config';
 import { remarkDefinitionList, defListHastHandlers } from 'remark-definition-list';
@@ -10,6 +11,7 @@ import starlightLinksValidator from 'starlight-links-validator';
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
+		preact(),
 		starlight({
 			title: 'xivapi',
 			favicon: '/favicon.ico',
@@ -31,14 +33,19 @@ export default defineConfig({
 				'docs/software',
 				'docs/migrate',
 				{
+					label: 'Search Playground',
+					link: '/play/',
+				},
+				{
 					label: 'API Reference',
 					link: '/api/1/docs',
 					attrs: { target: '_blank' },
 				}
 			],
 			components: {
-				Hero: './src/components/Hero.astro',
-				MarkdownContent: './src/components/MarkdownContent.astro',
+				ContentPanel: './src/components/overrides/ContentPanel.astro',
+				Hero: './src/components/overrides/Hero.astro',
+				MarkdownContent: './src/components/overrides/MarkdownContent.astro',
 			},
 			customCss: [
 				'./src/styles/headings.css',

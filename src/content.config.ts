@@ -7,6 +7,7 @@ export const collections = {
 		loader: docsLoader(),
 		schema: docsSchema({
 			extend: z.object({
+				fluid: z.boolean().optional(),
 				reference: z.object({
 					href: z.string(),
 					title: z.string().optional(),

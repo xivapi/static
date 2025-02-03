@@ -53,14 +53,14 @@ export default defineConfig({
 				'./src/styles/theme.css',
 			],
 			plugins: [starlightLinksValidator({
-				exclude: ['/api/**']
+				exclude: ['/api/**', '/docs/guides/']
 			})],
 		}),
 	],
 	redirects: {
-		'/docs/guides': {
+		'/docs/guides/': {
 			status: 302,
-			destination: '/docs/guides/concepts'
+			destination: '/docs/guides/concepts/'
 		}
 	},
 	markdown: {
